@@ -1,300 +1,305 @@
-﻿# 🤖 AtlasAgent
+﻿# AtlasAgent
 
-A production-ready Multi-Agent AI System with RAG (Retrieval-Augmented Generation), featuring intelligent orchestration, code generation, Gmail integration, and support for multiple LLM providers.
+AtlasAgent is a production-ready multi-agent AI system built with FastAPI and React. It combines intelligent agent orchestration, retrieval-augmented generation (RAG), code generation and review, Gmail integration, and support for multiple LLM providers through a unified abstraction layer.
 
-## ✨ Features
+---
 
-- 🤖 **Multi-Agent Orchestration** - Intelligent routing between specialized agents
-- 📚 **RAG System** - Document upload, chunking, and semantic search
-- 💻 **Code Generation & Review** - AI-powered code generator and critic
-- 📧 **Gmail Integration** - Email summarization and management
-- 🌐 **Multiple LLM Providers** - OpenAI, Anthropic, Google, Ollama support
-- 🎨 **Modern React Frontend** - Beautiful UI with real-time agent monitoring
-- 🔐 **Authentication** - Google OAuth & local auth with JWT
-- 🐳 **Docker Ready** - Easy deployment with Docker Compose
-- 👤 **Guest Mode** - Try it without sign-up
+## Features
 
-## 🚀 Quick Start
+- **Multi-Agent Orchestration** — LangGraph-powered routing between specialized agents
+- **RAG Pipeline** — Document ingestion, chunking, vector storage, and semantic retrieval via ChromaDB
+- **Code Generation and Review** — Automated code generation with an integrated critic agent for quality assurance
+- **Gmail Integration** — OAuth-authenticated email fetching and AI-generated summaries
+- **Multi-Provider LLM Support** — Unified interface for OpenAI, Anthropic, Google Gemini, Ollama, and OpenRouter
+- **React Frontend** — Responsive UI with real-time agent topology visualization
+- **Authentication** — JWT-based local auth and Google OAuth2
+- **Docker Support** — Full Compose configuration for containerized deployment
+- **Guest Mode** — Unauthenticated access for quick evaluation
 
-### Prerequisites
+---
 
-- Python 3.9+
-- Node.js 16+
-- Redis (optional, for caching)
-- PostgreSQL (optional, for persistent storage)
+## Prerequisites
 
-### Installation
+- Python 3.9 or higher
+- Node.js 16 or higher
+- Redis (optional — used for message history caching)
+- PostgreSQL (optional — used for persistent user and token storage)
 
-1. **Clone the repository**
+---
+
+## Installation
+
+**1. Clone the repository**
+
 ```bash
 git clone https://github.com/ShubhXDev3200/AtlasAgent.git
 cd AtlasAgent
 ```
 
-2. **Set up environment variables**
+**2. Configure environment variables**
+
 ```bash
 cp .env.example .env
-# Edit .env with your API keys
 ```
 
-3. **Install dependencies**
-```bash
-# Backend
-pip install -r requirements.txt
+Edit `.env` with your API keys and configuration values.
 
-# Frontend
+**3. Install backend dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+**4. Install frontend dependencies**
+
+```bash
 cd frontend
 npm install
 cd ..
 ```
 
-4. **Start the application**
+**5. Start the application**
+
 ```bash
-# Using the convenience scripts
-./start.sh      # Starts both backend and frontend
+./start.sh
 ```
 
-5. **Access the application**
-Open your browser and navigate to: **http://localhost:5173**
+The frontend will be available at `http://localhost:5173` and the backend API at `http://localhost:8000`.
 
-## 🎯 Simple Commands
+---
+
+## Service Management
 
 | Command | Description |
-|---------|-------------|
+|---|---|
 | `./start.sh` | Start both backend and frontend |
-| `./stop.sh` | Stop all services |
-| `./status.sh` | Check service status |
+| `./stop.sh` | Stop all running services |
+| `./status.sh` | Display current service status |
 | `./restart.sh` | Restart all services |
 
-## 🔧 Configuration
-
-### LLM Provider Setup
-
-AtlasAgent supports multiple LLM providers. Configure in your `.env` file:
+**Log files:**
 
 ```bash
-# Choose your provider: openai, anthropic, google, ollama, openrouter
-LLM_PROVIDER=openai
-LLM_MODEL=gpt-4
-LLM_API_KEY=your-api-key-here
+tail -f backend.log   # Backend application logs
+tail -f frontend.log  # Frontend build/dev server logs
+```
 
-# Provider-specific settings
-LLM_BASE_URL=https://api.openai.com/v1  # Optional
+---
+
+## Configuration
+
+### LLM Provider
+
+Set the following variables in your `.env` file:
+
+```bash
+LLM_PROVIDER=openai          # openai | anthropic | google | ollama | openrouter
+LLM_MODEL=gpt-4
+LLM_API_KEY=your-api-key
+LLM_BASE_URL=                # Optional — override the provider base URL
 LLM_TEMPERATURE=0
 LLM_MAX_TOKENS=4096
 ```
 
-### Database Configuration (Optional)
+### Database
 
 ```bash
-# PostgreSQL for persistent storage
+# PostgreSQL
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 POSTGRES_DB=atlas_agent
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=your-password
 
-# Redis for caching
+# Redis
 REDIS_HOST=localhost
 REDIS_PORT=6379
 ```
 
-### Gmail Integration (Optional)
+### Gmail Integration
 
-1. Create a Google Cloud project
-2. Enable Gmail API
-3. Download `credentials.json` and place in project root
-4. Set `GMAIL_ENABLED=true` in `.env`
+1. Create a project in the [Google Cloud Console](https://console.cloud.google.com/)
+2. Enable the Gmail API and configure OAuth2 credentials
+3. Download `credentials.json` and place it in the project root
+4. Set `GMAIL_WEB_CLIENT_ID`, `GMAIL_WEB_CLIENT_SECRET`, and `GMAIL_REDIRECT_URI` in `.env`
 
-## 📁 Project Structure
+### Application
+
+```bash
+APP_NAME=AtlasAgent
+DEBUG=false
+SECRET_KEY=your-secret-key
+JWT_SECRET_KEY=your-jwt-secret
+```
+
+For a full list of supported variables, refer to `.env.example`.
+
+---
+
+## Project Structure
 
 ```
 AtlasAgent/
-├── agents/              # AI agent implementations
-│   ├── orchestrator.py  # Main agent orchestrator
-│   ├── code_generator.py
-│   ├── code_critic.py
-│   ├── gmail_agent.py
-│   └── rag_agent.py
-├── api/                 # FastAPI routes
-├── config/              # Configuration settings
-├── frontend/            # React frontend
-│   ├── src/
-│   │   ├── components/  # UI components
-│   │   ├── pages/       # Page components
-│   │   └── store/       # State management
-├── llm_provider/        # Multi-provider LLM abstraction
-├── memory/              # Redis & PostgreSQL memory
-├── rag/                 # RAG implementation
-│   ├── chunking.py      # Document processing
-│   ├── embeddings.py    # Vector embeddings
-│   └── vector_store.py  # ChromaDB integration
-├── schemas/             # Pydantic models
-├── tools/               # Agent tools
-│   ├── code_context.py
-│   ├── code_pipeline.py
-│   ├── gmail_tools.py
-│   ├── retriever.py
-│   └── web_search.py
-├── app.py               # Main FastAPI application
-├── requirements.txt     # Python dependencies
-└── docker-compose.yml   # Docker configuration
+├── agents/
+│   ├── orchestrator.py      # LangGraph-based agent router
+│   ├── code_generator.py    # Code generation agent
+│   ├── code_critic.py       # Code review and validation agent
+│   ├── gmail_agent.py       # Gmail summarization agent
+│   └── rag_agent.py         # RAG query agent
+├── api/
+│   └── routes.py            # All FastAPI route definitions
+├── config/
+│   └── settings.py          # Pydantic settings and LLM config detection
+├── llm_provider/
+│   ├── base_provider.py     # Abstract provider interface
+│   ├── provider_factory.py  # Provider instantiation logic
+│   ├── llm_initializer.py   # Convenience wrapper for model loading
+│   ├── openai_provider.py
+│   ├── anthropic_provider.py
+│   ├── google_provider.py
+│   └── ollama_provider.py
+├── memory/
+│   ├── memory_manager.py    # Unified memory interface
+│   ├── redis_memory.py      # Redis-backed message history
+│   └── postgres_memory.py   # PostgreSQL-backed user and token storage
+├── rag/
+│   ├── chunking.py          # Document parsing and chunking
+│   ├── embeddings.py        # Embedding model configuration
+│   └── vector_store.py      # ChromaDB vector store operations
+├── schemas/
+│   └── request_models.py    # Pydantic request and response models
+├── tools/
+│   ├── code_context.py      # RAG-based code context retrieval tool
+│   ├── code_pipeline.py     # End-to-end code generation pipeline tool
+│   ├── gmail_tools.py       # Gmail API interaction utilities
+│   ├── retriever.py         # Document retriever LangChain tool
+│   └── web_search.py        # DuckDuckGo search tool
+├── frontend/
+│   └── src/
+│       ├── components/      # Reusable UI components
+│       ├── pages/           # Route-level page components
+│       ├── store/           # Zustand state management
+│       └── hooks/           # Custom React hooks
+├── app.py                   # FastAPI application entry point
+├── requirements.txt
+├── Dockerfile
+└── docker-compose.yml
 ```
 
-## 🔑 Key Components
+---
 
-### Agents
+## API Reference
 
-- **Orchestrator** - Routes queries to appropriate agents using LangGraph
-- **RAG Agent** - Semantic search across uploaded documents
-- **Code Generator** - Generates code from natural language
-- **Code Critic** - Reviews and improves generated code
-- **Gmail Agent** - Manages and summarizes emails
+Interactive documentation is available at runtime:
 
-### Tools
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
 
-- **Web Search** - DuckDuckGo integration for web queries
-- **Document Retriever** - ChromaDB vector store search
-- **Code Pipeline** - Automated code generation and review
-- **Gmail Tools** - Email fetching and processing
+### Core Endpoints
 
-## 🐳 Docker Deployment
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/health` | Health check |
+| GET | `/api/v1/config/llm` | Active LLM configuration |
+| POST | `/api/v1/chat` | Send a message to the orchestrator |
+| POST | `/api/v1/upload` | Upload a document for ingestion |
+| POST | `/api/v1/rag/query` | Query the knowledge base |
+| GET | `/api/v1/rag/documents` | List ingested documents |
+| DELETE | `/api/v1/rag/documents` | Clear the knowledge base |
+| POST | `/api/v1/code/generate` | Generate code from a natural language prompt |
+| POST | `/api/v1/code/critic` | Review and validate generated code |
+| GET | `/api/v1/gmail/list` | List inbox emails |
+| GET | `/api/v1/gmail/get/{msg_id}` | Retrieve a single email |
+| POST | `/api/v1/gmail/summarize` | Summarize selected emails |
+| POST | `/api/v1/auth/signup` | Register a new user |
+| POST | `/api/v1/auth/login` | Authenticate and receive a JWT |
+| POST | `/api/v1/auth/google` | Google OAuth2 sign-in |
+| GET | `/api/v1/agents/status` | Status of all agents and services |
+
+---
+
+## Docker Deployment
 
 ```bash
-# Build and start with Docker Compose
+# Start all services
 docker-compose up -d
 
 # View logs
 docker-compose logs -f
 
-# Stop services
+# Stop all services
 docker-compose down
 ```
 
-## 🧪 Testing
+---
 
-```bash
-# Test Redis connection
-python -c "from memory.redis_memory import save_message; print('Redis OK')"
+## Architecture Overview
 
-# Test PostgreSQL connection
-python -c "from memory.postgres_memory import get_connection; print('PostgreSQL OK')"
-
-# Run the application in development mode
-uvicorn app:app --reload
 ```
-
-## 📚 API Documentation
-
-Once the backend is running, visit:
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
-### Main Endpoints
-
-- `POST /api/v1/chat` - Chat with AI agents
-- `POST /api/v1/upload` - Upload documents for RAG
-- `POST /api/v1/rag/query` - Query uploaded documents
-- `POST /api/v1/code/generate` - Generate code
-- `POST /api/v1/code/critic` - Review code
-- `GET /api/v1/gmail/list` - List emails
-- `POST /api/v1/auth/signup` - Create account
-- `POST /api/v1/auth/login` - Login
-
-## 🎨 Frontend Features
-
-- **Modern UI** - Built with React, TailwindCSS, and Framer Motion
-- **Real-time Updates** - Agent status and topology visualization
-- **Dark Mode** - Beautiful dark theme
-- **Responsive** - Works on all devices
-- **Interactive Canvas** - Agent network visualization
-
-## 🔐 Security
-
-- JWT-based authentication
-- Password hashing with secure algorithms
-- Environment variable configuration
-- CORS protection
-- OAuth2 integration for Google login
-
-## 📝 Environment Variables
-
-See `.env.example` for all available configuration options:
-
-```bash
-# Application
-APP_NAME=AtlasAgent
-DEBUG=false
-SECRET_KEY=your-secret-key
-
-# LLM Provider
-LLM_PROVIDER=openai
-LLM_API_KEY=your-api-key
-
-# Database (Optional)
-POSTGRES_HOST=localhost
-REDIS_HOST=localhost
-
-# Gmail (Optional)
-GMAIL_ENABLED=false
-
-# Authentication
-JWT_SECRET=your-jwt-secret
+Client Request
+      |
+  FastAPI (api/routes.py)
+      |
+  Agent Orchestrator (LangGraph)
+      |
+  +---+---+---+---+
+  |       |       |
+RAG   Code   Gmail
+Agent Pipeline  Agent
+  |       |       |
+ChromaDB  LLM   Gmail API
+  
+All agents use:
+  get_llm_model() -> LLMProviderFactory -> Provider Instance
+  config/settings.py -> .env
 ```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 🆘 Troubleshooting
-
-### Backend won't start
-```bash
-# Check logs
-tail -f backend.log
-
-# Verify dependencies
-pip install -r requirements.txt
-```
-
-### Frontend won't start
-```bash
-# Check logs
-tail -f frontend.log
-
-# Reinstall dependencies
-cd frontend && npm install
-```
-
-### Services not stopping
-```bash
-# Force kill all services
-./stop.sh
-```
-
-### Database connection issues
-- Ensure PostgreSQL/Redis are running
-- Check connection strings in `.env`
-- Try using Docker Compose for automatic setup
-
-## 💡 Tips
-
-- Start with **Guest Mode** to try without setup
-- Use **OpenAI GPT-3.5** for cost-effective testing
-- Try **Ollama** for completely free, local LLMs
-- Enable **PostgreSQL** for conversation history
-- Enable **Gmail** for email agent features
-
-## 📞 Support
-
-For issues and questions:
-- Open an issue on GitHub
-- Check existing documentation in the project
 
 ---
 
-**Made with ❤️ for the AI community**
+## Security
+
+- Passwords are hashed using PBKDF2-HMAC-SHA256 with a random salt
+- JWT tokens are signed with a configurable secret key and expire after 7 days
+- Gmail credentials are stored per-user in PostgreSQL and refreshed automatically
+- CORS is configurable via environment variables
+- Sensitive configuration is loaded exclusively from environment variables
+
+---
+
+## Troubleshooting
+
+**Backend fails to start**
+
+Verify all required environment variables are set in `.env` and dependencies are installed:
+```bash
+pip install -r requirements.txt
+uvicorn app:app --reload
+```
+
+**Frontend fails to start**
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+**Database connection errors**
+
+Ensure PostgreSQL and Redis are running and accessible with the credentials in `.env`. Using `docker-compose up -d` is the easiest way to bring up both services.
+
+**LLM errors**
+
+Verify that `LLM_API_KEY` is valid for the configured `LLM_PROVIDER`. Use `GET /api/v1/config/llm` to confirm what the backend has detected.
+
+---
+
+## Contributing
+
+Pull requests are welcome. For significant changes, please open an issue first to discuss the proposed change.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
