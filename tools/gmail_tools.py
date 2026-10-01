@@ -3,7 +3,6 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from config.settings import settings
-from langchain_community.tools import Tool
 from memory.postgres_memory import get_gmail_token, save_gmail_token
 
 logger = logging.getLogger(__name__)
@@ -118,9 +117,3 @@ def fetch_single_email(msg_id, user_id):
         }
     except Exception as e:
         return f"error: {e}"
-#
-# gmail_tool = Tool(
-#     func= fetch_recent_emails,
-#     name= "gmail_tool",
-#     description=  "use it when user ask summary of his gmail or anything related to gmail"
-# )

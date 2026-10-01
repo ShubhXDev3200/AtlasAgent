@@ -3,7 +3,7 @@ Agent Orchestrator
 """
 
 import logging
-from typing import Annotated, TypedDict, Optional, List
+from typing import Annotated, TypedDict, Optional
 from langgraph.graph import StateGraph, END, START
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode

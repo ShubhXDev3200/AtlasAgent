@@ -1,4 +1,5 @@
-from langchain_community.tools import DuckDuckGoSearchRun , Tool
+from langchain_community.tools import DuckDuckGoSearchRun
+from langchain.tools import Tool
 
 def web_searcher(query):
     try:
